@@ -21,6 +21,16 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
+    var blood = doc.getElementById("blood");
+
+    for(var i = 0; i < 10; i++) {
+        var img = document.createElement("img");
+        img.id="img" + i;
+        img.setAttribute('src','images/blood.png');
+        blood.appendChild(img);
+    }
+
+
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
@@ -144,7 +154,8 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png'
+        'images/char-princess-girl.png',
+        'images/blood.png'
     ]);
     Resources.onReady(init);
 
