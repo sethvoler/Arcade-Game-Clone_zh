@@ -10,7 +10,7 @@ function waitTime(o) {
     o.innerHTML='TIME: ' + wait;
     wait--;
     if(wait == -1){
-        alert('GAME OVER!');
+        alert('GAME OVER!\n点击确定后请刷新网页重新开始。');
         wait = 60;
     }
     setTimeout(function() {
@@ -137,7 +137,7 @@ Player.prototype.checkCollisions = function (){
             blood--;
             this.bloodFn(blood);
             if(blood == 0){
-                alert('GAME OVER!')
+                alert('GAME OVER!\n点击确定后请刷新网页重新开始。')
             }
         }else{
             return player.x, player.y;
