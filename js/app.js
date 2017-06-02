@@ -2,6 +2,23 @@
 var score = 0;
 //一轮游戏有十次死亡机会
 var blood = 10;
+
+//一局游戏时间60秒
+var wait=60;
+var time = document.getElementById('time')
+function waitTime(o) {
+    o.innerHTML='TIME: ' + wait;
+    wait--;
+    if(wait == -1){
+        alert('GAME OVER!');
+        wait = 60;
+    }
+    setTimeout(function() {
+        waitTime(o);
+    },  1000)
+}
+waitTime(time);
+
 // 这是游戏人物要躲避的敌人
 var Enemy = function() {
     //用数组的方式随机输出敌人的y值
@@ -55,8 +72,9 @@ var Player = function(){
 
 Player.prototype.update = function(dt){
     //若成功过河，分数加1，游戏人物返回初始位置
-    if(this.y < -50){
+    if(this.y <= 0){
         score ++;
+        this.scoreFn(score);
         this.x = 200;
         this.y = 400;
     }
@@ -73,17 +91,33 @@ Player.prototype.render = function(){
 Player.prototype.handleInput = function(key){
     if (key == "left"){
         this.x = this.x -100;
+        //防止游戏人物向左超出游戏界面
+        if (this.x < 0) {
+            this.x = 0;
+        }
     }else if (key == "right"){
         this.x = this.x +100;
+        //防止游戏人物向左超出游戏界面
+        if (this.x > 400) {
+            this.x = 400;
+        }
     }else if (key == "up"){
         this.y = this.y -84;
+        //防止游戏人物向上超出游戏界面
+        if (this.y < -0) {
+            this.y = -0;
+        }
     }else if (key == "down"){
         this.y = this.y +84;
+        //防止游戏人物向下超出游戏界面
+        if (this.y > 400) {
+            this.y = 400;
+        }
     }
 };
 
 //碰撞满足条件
-function collisionsCondition(_arr, _this){
+Player.prototype.collisionsCondition = function(_arr, _this){
     var _length=_arr.length;
     for(var i = 0; i < _length; i++)
     {
@@ -97,18 +131,33 @@ function collisionsCondition(_arr, _this){
 Player.prototype.checkCollisions = function (){
     //发生碰撞，游戏人物返回初始位置，血量减1，若血量为0，弹出框提示游戏结束
 
-        if(collisionsCondition(allEnemies, this)){
+        if(this.collisionsCondition(allEnemies, this)){
             this.x = 200;
             this.y = 400;
             blood--;
-            if(blood === 0){
-                alert('Game over!')
+            this.bloodFn(blood);
+            if(blood == 0){
+                alert('GAME OVER!')
             }
         }else{
             return player.x, player.y;
 
     }
 }
+
+//血量减少函数
+Player.prototype.bloodFn = function(n){
+    var imgId = document.getElementById('img' + n);
+    imgId.parentNode.removeChild(imgId);
+};
+
+//分数增加函数
+Player.prototype.scoreFn = function(n){
+    var _score = document.getElementById('score');
+    _score.innerHTML = 'SCORE: '+ n;
+};
+
+
 // 实例化所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
